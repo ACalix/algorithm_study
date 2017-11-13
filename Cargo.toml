@@ -1,0 +1,6 @@
+[package]
+name = "algorithm_study"
+version = "0.1.0"
+authors = ["Allan Calix <acalix0592@gmail.com>"]
+
+[dependencies]
