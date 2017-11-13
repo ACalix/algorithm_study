@@ -1,3 +1,31 @@
+pub fn quicksort(num_list: &mut[i32]) {
+    if num_list.len() == 1 { return };
+
+   let pivot_index = partition(num_list);
+   if pivot_index != 0 {
+       quicksort(num_list.get_mut(..pivot_index).unwrap());
+   }
+    if pivot_index != (num_list.len() - 1) {
+        quicksort(num_list.get_mut(pivot_index + 1..).unwrap());
+    }
+}
+
+pub fn nth_largest(num_list: &[i32], mut n: usize) -> i32 {
+    // Subtracting a usize beyond 0 results in panic
+    if n != 0 { n -= 1 };
+    let mut list = num_list.to_vec();
+    let pivot_index = partition(list.as_mut_slice());
+
+    return
+        if n == pivot_index {
+            list[pivot_index]
+        } else if n > pivot_index {
+            nth_largest(&list[(pivot_index + 1)..], n - pivot_index)
+        } else {
+            nth_largest(&list[..pivot_index], n)
+        };
+}
+
 pub fn find_submax(unsorted_list: &[i32]) -> i32 {
     struct MaxPair {
         max: i32,
@@ -21,7 +49,7 @@ pub fn find_submax(unsorted_list: &[i32]) -> i32 {
     return max_pair.submax;
 }
 
-pub fn partition(arr: &mut[i32]) {
+pub fn partition(arr: &mut[i32]) -> usize {
     let pivot = approx_median(&arr);
     arr.swap(0, pivot);
 
@@ -34,6 +62,7 @@ pub fn partition(arr: &mut[i32]) {
     }
     j -= 1;
     arr.swap(0, j);
+    return j;
 }
 
 fn approx_median(arr: &[i32]) -> usize {
@@ -107,5 +136,31 @@ mod tests {
         let mut num_arr1 = vec![5, 2, 1, 9, 6, 4, 8, 7, 3];
         partition(num_arr1.as_mut_slice());
         assert_eq!(num_arr1, vec![3, 2, 1, 4, 5, 9, 8, 7, 6]);
+        let mut num_arr2 = vec![5, 6, 3, 2];
+        partition(num_arr2.as_mut_slice());
+        assert_eq!(num_arr2, vec![2, 3, 5, 6]);
+    }
+
+    #[test]
+    fn nth_largest_element() {
+        let num_arr = vec![7, 6, 3, 15, 2, 9, 5];
+        assert_eq!(nth_largest(&num_arr, 5), 7);
+        let num_arr = vec![7, 6, 3, 15, 2, 9, 5];
+        assert_eq!(nth_largest(&num_arr, 7), 15);
+        let num_arr = vec![7, 6, 3, 15, 2, 9, 5];
+        assert_eq!(nth_largest(&num_arr, 1), 2);
+    }
+
+    #[test]
+    fn sort_array() {
+        let mut num_arr = vec![7, 6, 3, 15, 2, 9, 5];
+        quicksort(num_arr.as_mut_slice());
+        assert_eq!(num_arr, vec![2, 3, 5, 6, 7, 9, 15]);
+        let mut num_arr1 = vec![3, 2, 1, 4, 5, 9, 8, 7, 6];
+        quicksort(num_arr1.as_mut_slice());
+        assert_eq!(num_arr1, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        let mut num_arr2 = vec![3];
+        quicksort(num_arr2.as_mut_slice());
+        assert_eq!(num_arr2, vec![3]);
     }
 }
