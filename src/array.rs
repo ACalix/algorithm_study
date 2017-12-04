@@ -9,6 +9,7 @@
 //     return x + y + z;
 // }
 
+#[allow(dead_code)]
 pub fn quicksort(num_list: &mut[i32]) {
     if num_list.len() == 1 { return };
 
@@ -21,6 +22,7 @@ pub fn quicksort(num_list: &mut[i32]) {
     }
 }
 
+#[allow(dead_code)]
 pub fn nth_largest(num_list: &[i32], mut n: usize) -> i32 {
     // Subtracting a usize beyond 0 results in panic
     if n != 0 { n -= 1 };
@@ -37,6 +39,7 @@ pub fn nth_largest(num_list: &[i32], mut n: usize) -> i32 {
         };
 }
 
+#[allow(dead_code)]
 pub fn find_submax(unsorted_list: &[i32]) -> i32 {
     struct MaxPair {
         max: i32,
@@ -60,6 +63,7 @@ pub fn find_submax(unsorted_list: &[i32]) -> i32 {
     return max_pair.submax;
 }
 
+#[allow(dead_code)]
 pub fn partition(arr: &mut[i32]) -> usize {
     let pivot = approx_median(&arr);
     arr.swap(0, pivot);
@@ -73,7 +77,7 @@ pub fn partition(arr: &mut[i32]) -> usize {
     }
     j -= 1;
     arr.swap(0, j);
-    return j;
+    return j
 }
 
 // fn count_split_inversions(a: &[i32], b: &[i32]) -> i32 {
@@ -83,7 +87,6 @@ pub fn partition(arr: &mut[i32]) -> usize {
 //
 //     for k in 0..(a.len() + b.len()) {
 //         if a.len() == (i as usize) || b.len() == (j as usize) { return (inversions as i32) };
-//         
 //         if a[i] > b[j] {
 //             j += 1;
 //         } else {
@@ -111,17 +114,16 @@ fn approx_median(arr: &[i32]) -> usize {
                                   arr[indexes.last]);
 
     let median = find_submax(&vec![first, middle, last]);
-    return
-        if median == first {
-            indexes.first
-        } else if median == middle {
-            indexes.middle
-        } else {
-            indexes.last
-        };
+    if median == first {
+        indexes.first
+    } else if median == middle {
+        indexes.middle
+    } else {
+        indexes.last
+    }
 }
 
-fn max_swap((x, y): (i32, i32)) -> (i32, i32) {
+fn max_swap<T: Ord>((x, y): (T, T)) -> (T, T) {
     return if y > x { (x, y) } else { (y, x) };
 }
 
